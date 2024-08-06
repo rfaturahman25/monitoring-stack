@@ -7,5 +7,7 @@ helm upgrade --install vmagent vm/victoria-metrics-agent -f values.yaml
 ```
 
 line 76 enable remotewrite to vminsert
+```
 remoteWriteUrls:
   - http://vmcluster-victoria-metrics-cluster-vminsert.default.svc.cluster.local:8480/insert/0/prometheus
+```

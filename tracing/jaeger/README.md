@@ -13,5 +13,5 @@ edit
 1. set false jaeger agent line 377
 2. if you want using jaeger all in one, set false for all provisionDataStore
 
-apps 
+apps
 hit jaeger-collector port 4318
