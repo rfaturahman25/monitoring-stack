@@ -161,7 +161,7 @@ securityContext:
   # runAsUser: 1000
 
 service:
-  enabled: false
+  enabled: true
   annotations: {}
   extraLabels: {}
   clusterIP: ""
