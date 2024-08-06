@@ -5,9 +5,9 @@
 * install metrics/vmcluster
 * install metrics/vmagent
 * Install visualize/grafana
- * setup grafana datasource loki and vmselect
- * add example dashboard metrics grafana
- * check logging
+  * setup grafana datasource loki and vmselect
+  * add example dashboard metrics grafana
+  * check logging on grafana explore menu
 * setup jaeger
 * install example apps with otel SDK
 * check jaeger UI
