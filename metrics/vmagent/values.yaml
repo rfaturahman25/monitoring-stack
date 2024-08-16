@@ -278,12 +278,19 @@ horizontalPodAutoscaling:
 config:
   global:
     scrape_interval: 10s
+    external_labels: 
+      cluster: staging
 
   # scrape self by default
   scrape_configs:
     - job_name: vmagent
       static_configs:
         - targets: ["localhost:8429"]
+
+    - job_name: kube-state-metrics
+      static_configs:
+        - targets:
+          - kube-state-metrics.default.svc.cluster.local:8080
 
       ## COPY from Prometheus helm chart https://github.com/helm/charts/blob/master/stable/prometheus/values.yaml
 

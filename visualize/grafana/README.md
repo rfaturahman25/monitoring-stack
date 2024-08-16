@@ -27,3 +27,6 @@ http://vmcluster-victoria-metrics-cluster-vmselect.default.svc.cluster.local:848
 
 loki query http path
 http://loki-distributed-gateway.default.svc.cluster.local
+
+import kube-state-metrics dashboard
+13332

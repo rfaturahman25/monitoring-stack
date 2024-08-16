@@ -298,12 +298,22 @@ config:
       # slack_configs:
       #  - channel: '@you'
       #    send_resolved: true
+    - name: 'Telegram Alert'
+      telegram_configs:
+      - api_url: https://api.telegram.org
+        bot_token: '7389666832:AAFvard09pObicglFTgk_VV50mm-dRBjHmQ'
+        chat_id: 1063810443
 
   route:
     group_wait: 10s
     group_interval: 5m
     receiver: default-receiver
     repeat_interval: 3h
+
+    routes: 
+      - match:
+          alert: deployment-down
+        receiver: 'Telegram Alert'
 
 ## Monitors ConfigMap changes and POSTs to a URL
 ## Ref: https://github.com/prometheus-operator/prometheus-operator/tree/main/cmd/prometheus-config-reloader

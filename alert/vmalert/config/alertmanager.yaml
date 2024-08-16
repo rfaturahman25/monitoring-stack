@@ -1,0 +1,47 @@
+global:
+  # slack_api_url: ''
+
+templates:
+  - '/config/*.tmpl'
+
+receivers:
+  - name: devnull
+  - name: 'Telegram Bot Alert'
+    telegram_configs:
+    - api_url: https://api.telegram.org
+      bot_token: '7389666832:AAFvard09pObicglFTgk_VV50mm-dRBjHmQ'
+      chat_id: 1063810443
+      send_resolved: true
+      message: '{{ template "telegram.deployment.resource" . }}'
+
+route:
+  group_wait: 10s
+  group_interval: 5m
+  receiver: devnull
+  repeat_interval: 3h
+  group_by: 
+    - deployment
+
+  routes: 
+    - match:
+        alertname: DeploymentReachingMemoryLimit
+      receiver: 'Telegram Bot Alert'
+
+templates: 
+alertmanager.tmpl: |
+  {{ define "telegram.deployment.resource" }}
+  {{ if eq .Status "firing" }}{{ range .Alerts }}
+  {{ .Annotations.message }} 🔥
+  *Severity:* `{{ .Labels.severity}}`
+  *Cluster:* `{{ .Labels.cluster }}`
+  *Namespace:* `{{ .Labels.namespace }}`
+  {{ end }}
+
+  {{ else }}{{ range .Alerts }}
+  {{ .Annotations.resolved }} ✅
+  *Cluster:* `{{ .Labels.cluster }}`
+  *Namespace:* `{{ .Labels.namespace }}`
+  {{ end }}
+
+  {{ end }}
+  {{ end }}

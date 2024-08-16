@@ -90,7 +90,7 @@ server:
   # vmalert reads metrics from source, next section represents its configuration. It can be any service which supports
   # MetricsQL or PromQL.
   datasource:
-    url: ""
+    url: "http://vmcluster-victoria-metrics-cluster-vmselect.default.svc.cluster.local:8481/select/0/prometheus/"
     # -- Basic auth for datasource
     basicAuth:
       username: ""
@@ -132,7 +132,7 @@ server:
   # Multiple notifiers can be enabled by using `notifiers` section
   notifier:
     alertmanager:
-      url: ""
+      url: "http://alertmanager.default.svc.cluster.local:9093"
       # -- Basic auth for alertmanager
       basicAuth:
         username: ""
@@ -278,7 +278,35 @@ server:
   configMap: ""
   config:
     alerts:
-      groups: []
+      groups: 
+        - name: alert-kube
+          rules:
+          - alert: DeploymentReachingMemoryLimit
+            for: 1s
+            expr: |
+              WITH(
+                  commonVars = {cluster="staging", namespace!~"kube-system"},
+                  deploymentName = avg by (deployment, pod) (
+                      label_replace(kube_pod_owner{commonVars, owner_kind="ReplicaSet"}, "replicaset", "$1", "owner_name", "(.*)") 
+                      * on (replicaset) group_left(deployment) avg(label_replace(kube_replicaset_owner{commonVars}, "deployment", "$1", "owner_name", "(.*)")) by (replicaset, deployment) 
+                  ),
+                  containerUsage = avg by (deployment, namespace, cluster) (
+                      deploymentName * on (pod) group_right(deployment) avg(container_memory_working_set_bytes{namespace!~"kube-system"}) by (container, pod, namespace, cluster)
+                  ),
+                  containerRequest = avg by (deployment, namespace, cluster) (
+                      deploymentName * on (pod) group_right(deployment) avg(kube_pod_container_resource_requests{resource="memory", namespace!~"kube-system"}) by (container, pod, namespace, cluster)
+                  ),
+              )
+              (containerUsage / containerRequest) * 100
+            labels:
+                cluster: '{{ $labels.cluster }}'
+                deployment: '{{ $labels.deployment }}'
+                namespace: '{{ $labels.namespace }}'
+                alert: deploymentReachingMemoryLimit
+                severity: WARNING
+            annotations:
+                message: '`{{ $labels.deployment }}` Deployment Memory utilization has reached {{ printf "%0.2f" $value }}% of its limit.'
+                resolved: '`{{ $labels.deployment}}` Deployment Memory utilization reached of its limit has been resolved.'
 
 serviceMonitor:
   enabled: false
@@ -295,7 +323,7 @@ serviceMonitor:
 #      insecureSkipVerify: true
 
 alertmanager:
-  enabled: false
+  enabled: true
   podMetadata:
     labels: {}
     annotations: {}
@@ -324,22 +352,53 @@ alertmanager:
   configMap: ""
   config:
     global:
-      resolve_timeout: 5m
-    route:
-      # default receiver
-      receiver: devnull
-      # tag to group by
-      group_by: ["alertname"]
-      # How long to initially wait to send a notification for a group of alerts
-      group_wait: 30s
-      # How long to wait before sending a notification about new alerts that are added to a group
-      group_interval: 10s
-      # How long to wait before sending a notification again if it has already been sent successfully for an alert
-      repeat_interval: 24h
+      # slack_api_url: ''
+
+    templates:
+      - '/config/*.tmpl'
+
     receivers:
       - name: devnull
-  templates: {}
-  #  alertmanager.tmpl: |-
+      - name: 'Telegram Bot Alert'
+        telegram_configs:
+        - api_url: https://api.telegram.org
+          bot_token: '7389666832:AAFvard09pObicglFTgk_VV50mm-dRBjHmQ'
+          chat_id: 1063810443
+          send_resolved: true
+          message: '{{ template "telegram.deployment.resource" . }}'
+
+    route:
+      group_wait: 10s
+      group_interval: 5m
+      receiver: devnull
+      repeat_interval: 3h
+      group_by: 
+        - deployment
+
+      routes: 
+        - match:
+            alertname: DeploymentReachingMemoryLimit
+          receiver: 'Telegram Bot Alert'
+
+  templates: 
+   alertmanager.tmpl: |
+      {{ define "telegram.deployment.resource" }}
+      {{ if eq .Status "firing" }}{{ range .Alerts }}
+      {{ .Annotations.message }} 🔥
+      *Severity:* `{{ .Labels.severity}}`
+      *Cluster:* `{{ .Labels.cluster }}`
+      *Namespace:* `{{ .Labels.namespace }}`
+      {{ end }}
+
+      {{ else }}{{ range .Alerts }}
+      {{ .Annotations.resolved }} ✅
+      *Cluster:* `{{ .Labels.cluster }}`
+      *Namespace:* `{{ .Labels.namespace }}`
+      {{ end }}
+
+      {{ end }}
+      {{ end }}
+
   service:
     annotations: {}
     type: ClusterIP

@@ -164,13 +164,13 @@ vmselect:
   # -- Container workdir
   containerWorkingDir: ""
   # -- Resource object
-  resources: {}
-    # limits:
-    #   cpu: 50m
-    #   memory: 64Mi
-    # requests:
-    #   cpu: 50m
-    #   memory: 64Mi
+  resources: 
+    limits:
+      cpu: 100m
+      memory: 128Mi
+    requests:
+      cpu: 50m
+      memory: 64Mi
 
   # -- Pod's security context. Ref: [https://kubernetes.io/docs/tasks/configure-pod-container/security-context/](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
   securityContext:
