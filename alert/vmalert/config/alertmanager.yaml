@@ -29,18 +29,21 @@ route:
 
 templates: 
 alertmanager.tmpl: |
-  {{ define "telegram.deployment.resource" }}
+  {{ define "telegram_deployment_resource" }}
   {{ if eq .Status "firing" }}{{ range .Alerts }}
-  {{ .Annotations.message }} 🔥
-  *Severity:* `{{ .Labels.severity}}`
-  *Cluster:* `{{ .Labels.cluster }}`
-  *Namespace:* `{{ .Labels.namespace }}`
+  🪪 <b>{{ .Labels.alertname }}</b>
+  ---
+  🔥 {{ .Annotations.message }} 
+  📖 Severity: <code>{{ .Labels.severity}}</code>
+  ✨ Cluster: <code>{{ .Labels.cluster }}</code>
+  🌌 Namespace: <code>{{ .Labels.namespace }}</code>
+  🛠 <a href="http://127.0.0.1:8090/d/garysdevil-kube-state-metrics-v2/kubernetes-dashboard?orgId=1&var-cluster={{ .Labels.cluster }}&var-node=All&var-namespace={{ .Labels.namespace }}&var-datasource=vmcluster&var-deployment={{ .Labels.deployment }}">Grafana</a> 🛠
   {{ end }}
 
   {{ else }}{{ range .Alerts }}
-  {{ .Annotations.resolved }} ✅
-  *Cluster:* `{{ .Labels.cluster }}`
-  *Namespace:* `{{ .Labels.namespace }}`
+  ✅ {{ .Annotations.resolved }} ✅
+  Cluster: <b>{{ .Labels.cluster }}</b>
+  Namespace: <b>{{ .Labels.namespace }}</b>
   {{ end }}
 
   {{ end }}

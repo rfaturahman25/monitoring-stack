@@ -297,7 +297,7 @@ server:
                       deploymentName * on (pod) group_right(deployment) avg(kube_pod_container_resource_requests{resource="memory", namespace!~"kube-system"}) by (container, pod, namespace, cluster)
                   ),
               )
-              (containerUsage / containerRequest) * 100
+              (containerUsage / containerRequest) * 100 > 10
             labels:
                 cluster: '{{ $labels.cluster }}'
                 deployment: '{{ $labels.deployment }}'
@@ -306,6 +306,31 @@ server:
             annotations:
                 message: '{{ $labels.deployment }} Deployment Memory utilization has reached {{ printf "%0.2f" $value }}% of its limit.'
                 resolved: '{{ $labels.deployment}} Deployment Memory utilization reached of its limit has been resolved.'
+
+          - alert: PodTerminated
+            for: 1s
+            expr: |
+              WITH(
+                  commonVars = {cluster="staging", namespace!~"kube-system"},
+                  deploymentName = avg by (deployment, pod) (
+                      label_replace(kube_pod_owner{commonVars, owner_kind="ReplicaSet"}, "replicaset", "$1", "owner_name", "(.*)") 
+                      * on (replicaset) group_left(deployment) avg(label_replace(kube_replicaset_owner{commonVars}, "deployment", "$1", "owner_name", "(.*)")) by (replicaset, deployment) 
+                  ),
+                  podOOM = avg by (deployment, namespace, cluster, pod, reason) (
+                      deploymentName * on (pod) group_right(deployment) increase(kube_pod_container_status_last_terminated_reason) 
+                  ),
+              )
+              podOOM >= 0
+            labels:
+                cluster: '{{ $labels.cluster }}'
+                deployment: '{{ $labels.deployment }}'
+                pod: '{{ $labels.pod }}'
+                namespace: '{{ $labels.namespace }}'
+                reason: '{{ $labels.reason }}'
+                severity: Critical
+            annotations:
+                message: '{{ $labels.pod }} pod on deployment {{ $labels.deployment }} has {{ $labels.reason }}'
+                resolved: '{{ $labels.pod }} pod {{ $labels.reason }} has been resolved.'
 
 serviceMonitor:
   enabled: false
@@ -361,8 +386,8 @@ alertmanager:
       - name: 'Telegram Bot Alert'
         telegram_configs:
         - api_url: https://api.telegram.org
-          bot_token: '7427610441:AAEXu_lh6F_JRtNdWsf4DloHD3rNd-3Xan0'
-          chat_id: -1002212462657
+          bot_token: '<bot_token>'
+          chat_id: <chat_id>
           send_resolved: true
           message: '{{ template "telegram_deployment_resource" . }}'
 
@@ -377,6 +402,9 @@ alertmanager:
       routes: 
         - match:
             alertname: DeploymentReachingMemoryLimit
+          receiver: 'Telegram Bot Alert'
+        - match:
+            alertname: PodTerminated
           receiver: 'Telegram Bot Alert'
 
   templates: 
