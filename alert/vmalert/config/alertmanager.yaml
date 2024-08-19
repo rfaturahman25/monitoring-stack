@@ -9,8 +9,8 @@ receivers:
   - name: 'Telegram Bot Alert'
     telegram_configs:
     - api_url: https://api.telegram.org
-      bot_token: '7389666832:AAFvard09pObicglFTgk_VV50mm-dRBjHmQ'
-      chat_id: 1063810443
+      bot_token: '7427610441:AAEXu_lh6F_JRtNdWsf4DloHD3rNd-3Xan0'
+      chat_id: -100221246265
       send_resolved: true
       message: '{{ template "telegram.deployment.resource" . }}'
 

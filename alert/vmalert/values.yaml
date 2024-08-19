@@ -302,11 +302,10 @@ server:
                 cluster: '{{ $labels.cluster }}'
                 deployment: '{{ $labels.deployment }}'
                 namespace: '{{ $labels.namespace }}'
-                alert: deploymentReachingMemoryLimit
                 severity: WARNING
             annotations:
-                message: '`{{ $labels.deployment }}` Deployment Memory utilization has reached {{ printf "%0.2f" $value }}% of its limit.'
-                resolved: '`{{ $labels.deployment}}` Deployment Memory utilization reached of its limit has been resolved.'
+                message: '{{ $labels.deployment }} Deployment Memory utilization has reached {{ printf "%0.2f" $value }}% of its limit.'
+                resolved: '{{ $labels.deployment}} Deployment Memory utilization reached of its limit has been resolved.'
 
 serviceMonitor:
   enabled: false
@@ -362,10 +361,10 @@ alertmanager:
       - name: 'Telegram Bot Alert'
         telegram_configs:
         - api_url: https://api.telegram.org
-          bot_token: '7389666832:AAFvard09pObicglFTgk_VV50mm-dRBjHmQ'
-          chat_id: 1063810443
+          bot_token: '7427610441:AAEXu_lh6F_JRtNdWsf4DloHD3rNd-3Xan0'
+          chat_id: -1002212462657
           send_resolved: true
-          message: '{{ template "telegram.deployment.resource" . }}'
+          message: '{{ template "telegram_deployment_resource" . }}'
 
     route:
       group_wait: 10s
@@ -382,18 +381,21 @@ alertmanager:
 
   templates: 
    alertmanager.tmpl: |
-      {{ define "telegram.deployment.resource" }}
+      {{ define "telegram_deployment_resource" }}
       {{ if eq .Status "firing" }}{{ range .Alerts }}
-      {{ .Annotations.message }} 🔥
-      *Severity:* `{{ .Labels.severity}}`
-      *Cluster:* `{{ .Labels.cluster }}`
-      *Namespace:* `{{ .Labels.namespace }}`
+      🪪 <b>{{ .Labels.alertname }}</b>
+      ---
+      🔥 {{ .Annotations.message }} 
+      📖 Severity: <code>{{ .Labels.severity}}</code>
+      ✨ Cluster: <code>{{ .Labels.cluster }}</code>
+      🌌 Namespace: <code>{{ .Labels.namespace }}</code>
+      🛠 <a href="http://127.0.0.1:8090/d/garysdevil-kube-state-metrics-v2/kubernetes-dashboard?orgId=1&var-cluster={{ .Labels.cluster }}&var-node=All&var-namespace={{ .Labels.namespace }}&var-datasource=vmcluster&var-deployment={{ .Labels.deployment }}">Grafana</a> 🛠
       {{ end }}
 
       {{ else }}{{ range .Alerts }}
-      {{ .Annotations.resolved }} ✅
-      *Cluster:* `{{ .Labels.cluster }}`
-      *Namespace:* `{{ .Labels.namespace }}`
+      ✅ {{ .Annotations.resolved }} ✅
+      Cluster: <b>{{ .Labels.cluster }}</b>
+      Namespace: <b>{{ .Labels.namespace }}</b>
       {{ end }}
 
       {{ end }}

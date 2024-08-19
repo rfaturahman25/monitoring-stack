@@ -19,3 +19,5 @@ url: "http://alertmanager.default.svc.cluster.local:9093"
 line 281 add alerting rules
 
 line 355 add alertmanager config 
+
+line 365 change with your telegram bot config
