@@ -2,8 +2,10 @@
 
 * install logging/loki
 * install logging/promtail
-* install metrics/vmcluster
+* install metrics/node_exporter
+* install metrics/ksm
 * install metrics/vmagent
+* install metrics/vmcluster
 * Install visualize/grafana
   * setup grafana datasource loki and vmselect
   * add example dashboard metrics grafana
