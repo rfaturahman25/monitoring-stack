@@ -1,11 +1,11 @@
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
-  name: vmalert
+  name: jaeger
   namespace: monitoring
 spec:
   hosts:
-    - vmalert.apps.kowlon.my.id
+    - jaeger.apps.kowlon.my.id
   gateways:
     - production/apps
   http:
@@ -15,5 +15,5 @@ spec:
       route:
         - destination:
             port:
-              number: 
-            host: 
+              number: 16686
+            host: jaeger-query

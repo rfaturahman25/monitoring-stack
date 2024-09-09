@@ -31,7 +31,7 @@
         {
             "datasource": {
                 "type": "prometheus",
-                "uid": "PEB814BE3CA3B78C0"
+                "uid": "bdxcrvm95rim8e"
             },
             "fieldConfig": {
                 "defaults": {
@@ -158,7 +158,7 @@
                 {
                     "datasource": {
                         "type": "prometheus",
-                        "uid": "PEB814BE3CA3B78C0"
+                        "uid": "bdxcrvm95rim8e"
                     },
                     "editorMode": "code",
                     "expr": "histogram_quantile(\n    0.99, sum(\n        rate(\n            istio_request_duration_milliseconds_bucket\n            {\n                destination_app=~\"$app\",\n                response_code=~\"$status\",\n                job=~\"$job\"\n            }[1m])) by (le)\n    )",
@@ -169,7 +169,7 @@
                 {
                     "datasource": {
                         "type": "prometheus",
-                        "uid": "PEB814BE3CA3B78C0"
+                        "uid": "bdxcrvm95rim8e"
                     },
                     "editorMode": "code",
                     "expr": "histogram_quantile(\n    0.90, sum(\n        rate(\n            istio_request_duration_milliseconds_bucket\n            {\n                destination_app=~\"$app\",\n                response_code=~\"$status\",\n                job=~\"$job\"\n            }[1m])) by (le)\n    )",
@@ -181,7 +181,7 @@
                 {
                     "datasource": {
                         "type": "prometheus",
-                        "uid": "PEB814BE3CA3B78C0"
+                        "uid": "bdxcrvm95rim8e"
                     },
                     "editorMode": "code",
                     "expr": "histogram_quantile(\n    0.50, sum(\n        rate(\n            istio_request_duration_milliseconds_bucket\n            {\n                destination_app=~\"$app\",\n                response_code=~\"$status\",\n                job=~\"$job\"\n            }[1m])) by (le)\n    )",
@@ -197,7 +197,7 @@
         {
             "datasource": {
                 "type": "prometheus",
-                "uid": "PEB814BE3CA3B78C0"
+                "uid": "bdxcrvm95rim8e"
             },
             "fieldConfig": {
                 "defaults": {
@@ -279,7 +279,7 @@
                 {
                     "datasource": {
                         "type": "prometheus",
-                        "uid": "PEB814BE3CA3B78C0"
+                        "uid": "bdxcrvm95rim8e"
                     },
                     "editorMode": "code",
                     "expr": "rate(istio_requests_total{destination_app=~\"$app\", response_code=~\"$status\", job=~\"$job\"}[30s])",
@@ -290,7 +290,7 @@
                 {
                     "datasource": {
                         "type": "prometheus",
-                        "uid": "PEB814BE3CA3B78C0"
+                        "uid": "bdxcrvm95rim8e"
                     },
                     "editorMode": "code",
                     "expr": "sum(rate(istio_requests_total{destination_app=~\"$app\", response_code=~\"$status\", job=~\"$job\"}[30s]))",
@@ -306,7 +306,7 @@
         {
             "datasource": {
                 "type": "prometheus",
-                "uid": "PEB814BE3CA3B78C0"
+                "uid": "bdxcrvm95rim8e"
             },
             "fieldConfig": {
                 "defaults": {
@@ -390,7 +390,7 @@
                 {
                     "datasource": {
                         "type": "prometheus",
-                        "uid": "PEB814BE3CA3B78C0"
+                        "uid": "bdxcrvm95rim8e"
                     },
                     "editorMode": "code",
                     "expr": "sum(\n    rate(\n        istio_requests_total\n        {\n            destination_app=~\"$app\",\n            response_code!~\"[4-5].*\",\n            job=~\"$job\"\n        }[1m])) by (destination_app) /\nsum(\n    rate(\n        istio_requests_total\n        {\n            destination_app=~\"$app\",\n            job=~\"$job\"\n        }[1m])) by (destination_app)",
@@ -418,7 +418,7 @@
                 },
                 "datasource": {
                     "type": "prometheus",
-                    "uid": "PEB814BE3CA3B78C0"
+                    "uid": "bdxcrvm95rim8e"
                 },
                 "definition": "label_values(istio_requests_total, job)",
                 "description": "",
@@ -445,7 +445,7 @@
                 },
                 "datasource": {
                     "type": "prometheus",
-                    "uid": "PEB814BE3CA3B78C0"
+                    "uid": "bdxcrvm95rim8e"
                 },
                 "definition": "label_values(istio_request_duration_milliseconds_count{job=~\"$job\"}, destination_app)",
                 "hide": 0,
