@@ -13,3 +13,5 @@
 * setup jaeger
 * install example apps with otel SDK
 * check jaeger UI
+* install alert/vmalert
+  * deploy example oom service for alert oom 
