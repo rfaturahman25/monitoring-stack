@@ -6,7 +6,7 @@ helm show values grafana/grafana  > values.yaml
 helm upgrade --install grafana grafana/grafana -f values.yaml
 ```
 
-line 367, takutnya ngerestart nanti ilang datanya balik lagi ke awal
+line 367, setup pvc for persistence data (sunnah but recommended)
 ```
 persistence:
   type: pvc
@@ -17,11 +17,10 @@ persistence:
   size: 2Gi
 ```
 
-get userpass
+get userpass (user admin)
 ```
 kubectl get secret --namespace monitoring grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
 ```
-O8jNKtupHcgtylG93ewuZtxwnNlqWKzHRo4i7Eyo
 
 victoriametrics query http path
 http://vmcluster-victoria-metrics-cluster-vmselect.monitoring.svc.cluster.local:8481/select/0/prometheus/
