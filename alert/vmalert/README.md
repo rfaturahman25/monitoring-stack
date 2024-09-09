@@ -8,12 +8,12 @@ helm upgrade --install vmalert vm/victoria-metrics-alert -f values.yaml
 
 line 93 add url vmselect 
 ```
-url: "http://vmcluster-victoria-metrics-cluster-vmselect.default.svc.cluster.local:8481/select/0/prometheus/" 
+url: "http://vmcluster-victoria-metrics-cluster-vmselect.monitoring.svc.cluster.local:8481/select/0/prometheus/" 
 ```
 
 line 135 add url alertmanager 
 ```
-url: "http://alertmanager.default.svc.cluster.local:9093"
+url: "http://alertmanager.monitoring.svc.cluster.local:9093"
 ```
 
 line 281 add alerting rules

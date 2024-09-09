@@ -2,6 +2,9 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 global:
+  image:
+    registry: ""
+  imagePullSecrets: []
   compatibility:
     openshift:
       adaptSecurityContext: "auto"
@@ -19,8 +22,6 @@ serviceAccount:
 
 rbac:
   create: true
-  # Note: The PSP will only be deployed, if Kubernetes (<1.25) supports the resource.
-  pspEnabled: true
   namespaced: false
   extraLabels: {}
   annotations: {}
@@ -29,6 +30,7 @@ server:
   name: server
   enabled: true
   image:
+    registry: ""
     repository: victoriametrics/vmalert
     tag: "" # rewrites Chart.AppVersion
     # Variant of the image to use.
@@ -47,7 +49,7 @@ server:
     # maxUnavailable: 1
     labels: {}
 
-  # -- Additional environment variables (ex.: secret tokens, flags) https://github.com/VictoriaMetrics/VictoriaMetrics#environment-variables
+  # -- Additional environment variables (ex.: secret tokens, flags) https://docs.victoriametrics.com/#environment-variables
   env:
     []
     # - name: VM_remoteWrite_basicAuth_password
@@ -60,19 +62,26 @@ server:
     []
     #- configMapRef:
     #    name: special-config
-    
+
   # Readiness & Liveness probes
   probe:
     readiness:
+      httpGet:
+        path: '{{ include "vm.probe.http.path" . }}'
+        scheme: '{{ include "vm.probe.http.scheme" . }}'
+        port: '{{ include "vm.probe.port" . }}'
       initialDelaySeconds: 5
       periodSeconds: 15
       timeoutSeconds: 5
       failureThreshold: 3
     liveness:
+      tcpSocket:
+        port: '{{ include "vm.probe.port" . }}'
       initialDelaySeconds: 5
       periodSeconds: 15
       timeoutSeconds: 5
       failureThreshold: 3
+    startup: {}
 
   replicaCount: 1
 
@@ -90,7 +99,7 @@ server:
   # vmalert reads metrics from source, next section represents its configuration. It can be any service which supports
   # MetricsQL or PromQL.
   datasource:
-    url: "http://vmcluster-victoria-metrics-cluster-vmselect.monitoring.svc.cluster.local:8481/select/0/prometheus/"
+    url: ""
     # -- Basic auth for datasource
     basicAuth:
       username: ""
@@ -132,7 +141,7 @@ server:
   # Multiple notifiers can be enabled by using `notifiers` section
   notifier:
     alertmanager:
-      url: "http://alertmanager.monitoring.svc.cluster.local:9093"
+      url: ""
       # -- Basic auth for alertmanager
       basicAuth:
         username: ""
@@ -202,8 +211,10 @@ server:
     # nodePort: 30000
     type: ClusterIP
     # Ref: https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/#preserving-the-client-source-ip
-    # externalTrafficPolicy: "local"
-    # healthCheckNodePort: 0
+    externalTrafficPolicy: ""
+    healthCheckNodePort: ""
+    ipFamilyPolicy: ""
+    ipFamilies: []
 
   ingress:
     enabled: false
@@ -278,65 +289,40 @@ server:
   configMap: ""
   config:
     alerts:
-      groups: 
-        - name: alert-kube
-          rules:
-          - alert: DeploymentReachingMemoryLimit
-            for: 1s
-            expr: |
-              WITH(
-                  commonVars = {cluster="staging", namespace!~"kube-system"},
-                  deploymentName = avg by (deployment, pod) (
-                      label_replace(kube_pod_owner{commonVars, owner_kind="ReplicaSet"}, "replicaset", "$1", "owner_name", "(.*)") 
-                      * on (replicaset) group_left(deployment) avg(label_replace(kube_replicaset_owner{commonVars}, "deployment", "$1", "owner_name", "(.*)")) by (replicaset, deployment) 
-                  ),
-                  containerUsage = avg by (deployment, namespace, cluster) (
-                      deploymentName * on (pod) group_right(deployment) avg(container_memory_working_set_bytes{namespace!~"kube-system"}) by (container, pod, namespace, cluster)
-                  ),
-                  containerRequest = avg by (deployment, namespace, cluster) (
-                      deploymentName * on (pod) group_right(deployment) avg(kube_pod_container_resource_requests{resource="memory", namespace!~"kube-system"}) by (container, pod, namespace, cluster)
-                  ),
-              )
-              (containerUsage / containerRequest) * 100 > 10
-            labels:
-                cluster: '{{ $labels.cluster }}'
-                deployment: '{{ $labels.deployment }}'
-                namespace: '{{ $labels.namespace }}'
-                severity: WARNING
-            annotations:
-                message: '{{ $labels.deployment }} Deployment Memory utilization has reached {{ printf "%0.2f" $value }}% of its limit.'
-                resolved: '{{ $labels.deployment}} Deployment Memory utilization reached of its limit has been resolved.'
+      groups: []
 
-          - alert: PodTerminated
-            for: 1s
-            expr: |
-              WITH(
-                  commonVars = {cluster="staging", namespace!~"kube-system"},
-                  deploymentName = avg by (deployment, pod) (
-                      label_replace(kube_pod_owner{commonVars, owner_kind="ReplicaSet"}, "replicaset", "$1", "owner_name", "(.*)") 
-                      * on (replicaset) group_left(deployment) avg(label_replace(kube_replicaset_owner{commonVars}, "deployment", "$1", "owner_name", "(.*)")) by (replicaset, deployment) 
-                  ),
-                  podOOM = avg by (deployment, namespace, cluster, pod, reason) (
-                      deploymentName * on (pod) group_right(deployment) increase(kube_pod_container_status_last_terminated_reason) 
-                  ),
-              )
-              podOOM >= 0
-            labels:
-                cluster: '{{ $labels.cluster }}'
-                deployment: '{{ $labels.deployment }}'
-                pod: '{{ $labels.pod }}'
-                namespace: '{{ $labels.namespace }}'
-                reason: '{{ $labels.reason }}'
-                severity: Critical
-            annotations:
-                message: '{{ $labels.pod }} pod on deployment {{ $labels.deployment }} has {{ $labels.reason }}'
-                resolved: '{{ $labels.pod }} pod {{ $labels.reason }} has been resolved.'
+  # -- Vertical Pod Autoscaler
+  verticalPodAutoscaler:
+    # -- Use VPA for vmalert
+    enabled: false
+    # recommenders:
+    #   - name: 'alternative'
+    # updatePolicy:
+    #   updateMode: "Auto"
+    #   minReplicas: 1
+    # resourcePolicy:
+    #   containerPolicies:
+    #     - containerName: '*'
+    #       minAllowed:
+    #         cpu: 100m
+    #         memory: 128Mi
+    #       maxAllowed:
+    #         cpu: 1
+    #         memory: 500Mi
+    #       controlledResources: ["cpu", "memory"]
 
 serviceMonitor:
+  # -- Enable deployment of Service Monitor for server component. This is Prometheus operator object
   enabled: false
+  # -- Service Monitor labels
   extraLabels: {}
+  # -- Service Monitor annotations
   annotations: {}
+  # -- Service Monitor relabelings
   relabelings: []
+  # -- Basic auth params for Service Monitor
+  basicAuth: {}
+  # -- Service Monitor metricRelabelings
   metricRelabelings: []
 #    interval: 15s
 #    scrapeTimeout: 5s
@@ -347,7 +333,7 @@ serviceMonitor:
 #      insecureSkipVerify: true
 
 alertmanager:
-  enabled: true
+  enabled: false
   podMetadata:
     labels: {}
     annotations: {}
@@ -381,7 +367,7 @@ alertmanager:
   listenAddress: "0.0.0.0:9093"
   extraArgs: {}
   # key: value
-
+  envFrom: []
   # external URL, that alertmanager will expose to receivers
   baseURL: ""
   # external URL Prefix, Prefix for the internal routes of web endpoints
@@ -391,65 +377,40 @@ alertmanager:
   configMap: ""
   config:
     global:
-      # slack_api_url: ''
-
-    templates:
-      - '/config/*.tmpl'
-
+      resolve_timeout: 5m
+    route:
+      # default receiver
+      receiver: devnull
+      # tag to group by
+      group_by: ["alertname"]
+      # How long to initially wait to send a notification for a group of alerts
+      group_wait: 30s
+      # How long to wait before sending a notification about new alerts that are added to a group
+      group_interval: 10s
+      # How long to wait before sending a notification again if it has already been sent successfully for an alert
+      repeat_interval: 24h
     receivers:
       - name: devnull
-      - name: 'Telegram Bot Alert'
-        telegram_configs:
-        - api_url: https://api.telegram.org
-          bot_token: '<bot_token>'
-          chat_id: <chat_id>
-          send_resolved: true
-          message: '{{ template "telegram_deployment_resource" . }}'
-
-    route:
-      group_wait: 10s
-      group_interval: 5m
-      receiver: devnull
-      repeat_interval: 3h
-      group_by: 
-        - deployment
-
-      routes: 
-        - match:
-            alertname: DeploymentReachingMemoryLimit
-          receiver: 'Telegram Bot Alert'
-        - match:
-            alertname: PodTerminated
-          receiver: 'Telegram Bot Alert'
-
-  templates: 
-   alertmanager.tmpl: |
-      {{ define "telegram_deployment_resource" }}
-      {{ if eq .Status "firing" }}{{ range .Alerts }}
-      🪪 <b>{{ .Labels.alertname }}</b>
-      ---
-      🔥 {{ .Annotations.message }} 
-      📖 Severity: <code>{{ .Labels.severity}}</code>
-      ✨ Cluster: <code>{{ .Labels.cluster }}</code>
-      🌌 Namespace: <code>{{ .Labels.namespace }}</code>
-      🛠 <a href="http://127.0.0.1:8090/d/garysdevil-kube-state-metrics-v2/kubernetes-dashboard?orgId=1&var-cluster={{ .Labels.cluster }}&var-node=All&var-namespace={{ .Labels.namespace }}&var-datasource=vmcluster&var-deployment={{ .Labels.deployment }}">Grafana</a> 🛠
-      {{ end }}
-
-      {{ else }}{{ range .Alerts }}
-      ✅ {{ .Annotations.resolved }} ✅
-      Cluster: <b>{{ .Labels.cluster }}</b>
-      Namespace: <b>{{ .Labels.namespace }}</b>
-      {{ end }}
-
-      {{ end }}
-      {{ end }}
-
+  templates: {}
+  #  alertmanager.tmpl: |-
   service:
     annotations: {}
+    labels: {}
+    clusterIP: ""
     type: ClusterIP
     port: 9093
-    # if you want to force a specific nodePort. Must be use with service.type=NodePort
-    # nodePort:
+    # -- if you want to force a specific nodePort. Must be use with service.type=NodePort
+    nodePort: ""
+    # -- Ref: https://kubernetes.io/docs/user-guide/services/#external-ips
+    externalIPs: []
+    loadBalancerIP: ""
+    loadBalancerSourceRanges: []
+    servicePort: 8880
+    # -- Ref: https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/#preserving-the-client-source-ip
+    externalTrafficPolicy: ""
+    healthCheckNodePort: ""
+    ipFamilyPolicy: ""
+    ipFamilies: []
   ingress:
     enabled: false
     annotations: {}
@@ -471,16 +432,17 @@ alertmanager:
     # ingressClassName: nginx
     # -- pathType is only for k8s >= 1.1=
     pathType: Prefix
+  emptyDir: {}
   persistentVolume:
     # -- Create/use Persistent Volume Claim for alertmanager component. Empty dir if false
-    enabled: true
+    enabled: false
     # -- Array of access modes. Must match those of existing PV or dynamic provisioner. Ref: [http://kubernetes.io/docs/user-guide/persistent-volumes/](http://kubernetes.io/docs/user-guide/persistent-volumes/)
     accessModes:
       - ReadWriteOnce
     # -- Persistant volume annotations
     annotations: {}
     # -- StorageClass to use for persistent volume. Requires alertmanager.persistentVolume.enabled: true. If defined, PVC created automatically
-    storageClass: "gp3"
+    storageClass: ""
     # -- Existing Claim name. If defined, PVC must be created manually before volume will be bound
     existingClaim: ""
     # -- Mount path. Alertmanager data Persistent Volume mount root path.

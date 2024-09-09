@@ -367,7 +367,7 @@ extraContainerVolumes: []
 persistence:
   type: pvc
   enabled: true
-  # storageClassName: default
+  storageClassName: gp3
   accessModes:
     - ReadWriteOnce
   size: 2Gi

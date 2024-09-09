@@ -74,7 +74,7 @@ podDisruptionBudget:
 # WARN: need to specify at least one remote write url or one multi tenant url
 # remoteWriteUrls: []
 remoteWriteUrls:
-  - http://vmcluster-victoria-metrics-cluster-vminsert.default.svc.cluster.local:8480/insert/0/prometheus
+  - http://vmcluster-victoria-metrics-cluster-vminsert.monitoring.svc.cluster.local:8480/insert/0/prometheus
 #   - http://vm-insert:8480/insert/0/prometheus
 #   - http://prometheus:8480/insert/0/prometheus
 
@@ -290,8 +290,29 @@ config:
     - job_name: kube-state-metrics
       static_configs:
         - targets:
-          - kube-state-metrics.default.svc.cluster.local:8080
+          - kube-state-metrics.monitoring.svc.cluster.local:8080
 
+    - job_name: 'istiod'
+      kubernetes_sd_configs:
+      - role: endpoints
+        namespaces:
+          names:
+          - istio-system
+      relabel_configs:
+      - source_labels: [__meta_kubernetes_service_name, __meta_kubernetes_endpoint_port_name]
+        action: keep
+        regex: istiod;http-monitoring
+
+    - job_name: 'envoy-stats'
+      metrics_path: /stats/prometheus
+      kubernetes_sd_configs:
+      - role: pod
+
+      relabel_configs:
+      - source_labels: [__meta_kubernetes_pod_container_port_name]
+        action: keep
+        regex: '.*-envoy-prom'
+        
       ## COPY from Prometheus helm chart https://github.com/helm/charts/blob/master/stable/prometheus/values.yaml
 
       # Scrape config for API servers.

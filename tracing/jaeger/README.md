@@ -15,3 +15,11 @@ edit
 
 apps
 hit jaeger-collector port 4318
+cd ../example-apps/kubernetes/base/hotrod/deployment.yaml
+```
+    spec:
+      containers:
+      - env:
+          - name: OTEL_EXPORTER_OTLP_ENDPOINT
+            value: "http://jaeger-collector.monitoring.svc.cluster.local:4318"
+``` 

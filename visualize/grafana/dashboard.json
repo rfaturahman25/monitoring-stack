@@ -38,7 +38,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "cduduhboc9xxca"
+        "uid": "bdxcrvm95rim8e"
       },
       "fieldConfig": {
         "defaults": {
@@ -117,7 +117,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "cduduhboc9xxca"
+            "uid": "bdxcrvm95rim8e"
           },
           "editorMode": "code",
           "expr": "WITH(\r\n    commonVars = {cluster=\"$cluster\", namespace=\"$namespace\"},\r\n    deploymentName = avg by (deployment, pod) (\r\n        label_replace(kube_pod_owner{commonVars, owner_kind=\"ReplicaSet\", owner_name=~\"$deployment.*\"}, \"replicaset\", \"$1\", \"owner_name\", \"(.*)\") \r\n        * on (replicaset) group_left(deployment) avg(label_replace(kube_replicaset_owner{commonVars, owner_name=~\"$deployment\"}, \"deployment\", \"$1\", \"owner_name\", \"(.*)\")) by (replicaset, deployment) \r\n    ),\r\n    containerRequest = avg by (deployment, container) (deploymentName * on (pod) group_right(deployment) avg(kube_pod_container_resource_requests{resource=\"cpu\",pod=~\"$deployment.*\", namespace=~\"$namespace\"}) by (pod, container))\r\n)\r\ncontainerRequest * 1000 ",
@@ -130,7 +130,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "cduduhboc9xxca"
+            "uid": "bdxcrvm95rim8e"
           },
           "editorMode": "code",
           "expr": "WITH(\r\n    commonVars = {cluster=\"$cluster\", namespace=\"$namespace\"},\r\n    deploymentName = avg by (deployment, pod) (\r\n        label_replace(kube_pod_owner{commonVars, owner_kind=\"ReplicaSet\", owner_name=~\"$deployment.*\"}, \"replicaset\", \"$1\", \"owner_name\", \"(.*)\") \r\n        * on (replicaset) group_left(deployment) avg(label_replace(kube_replicaset_owner{commonVars, owner_name=~\"$deployment\"}, \"deployment\", \"$1\", \"owner_name\", \"(.*)\")) by (replicaset, deployment) \r\n    ),\r\n    containerLimit = avg by (deployment, container) (deploymentName * on (pod) group_right(deployment) avg(kube_pod_container_resource_limits{resource=\"cpu\",pod=~\"$deployment.*\", namespace=~\"$namespace\"}) by (pod, container))\r\n)\r\ncontainerLimit * 1000 ",
@@ -143,7 +143,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "cduduhboc9xxca"
+            "uid": "bdxcrvm95rim8e"
           },
           "editorMode": "code",
           "expr": "WITH(\r\n    commonVars = {cluster=\"$cluster\", namespace=\"$namespace\"},\r\n    deploymentName = avg by (deployment, pod) (\r\n        label_replace(kube_pod_owner{commonVars, owner_kind=\"ReplicaSet\", owner_name=~\"$deployment.*\"}, \"replicaset\", \"$1\", \"owner_name\", \"(.*)\") \r\n        * on (replicaset) group_left(deployment) avg(label_replace(kube_replicaset_owner{commonVars, owner_name=~\"$deployment\"}, \"deployment\", \"$1\", \"owner_name\", \"(.*)\")) by (replicaset, deployment) \r\n    ),\r\n    containerUsage = avg by (deployment, container) (deploymentName * on (pod) group_right(deployment) sum(rate(container_cpu_usage_seconds_total{pod=~\"$deployment.*\",namespace=~\"$namespace\"}[$__rate_interval])) by (pod,container))\r\n)\r\ncontainerUsage * 1000 ",
@@ -160,7 +160,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "cduduhboc9xxca"
+        "uid": "bdxcrvm95rim8e"
       },
       "fieldConfig": {
         "defaults": {
@@ -240,7 +240,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "cduduhboc9xxca"
+            "uid": "bdxcrvm95rim8e"
           },
           "editorMode": "code",
           "expr": "WITH(\r\n    commonVars = {cluster=\"$cluster\", namespace=\"$namespace\"},\r\n    deploymentName = avg by (deployment, pod) (\r\n        label_replace(kube_pod_owner{commonVars, owner_kind=\"ReplicaSet\", owner_name=~\"$deployment.*\"}, \"replicaset\", \"$1\", \"owner_name\", \"(.*)\") \r\n        * on (replicaset) group_left(deployment) avg(label_replace(kube_replicaset_owner{commonVars, owner_name=~\"$deployment\"}, \"deployment\", \"$1\", \"owner_name\", \"(.*)\")) by (replicaset, deployment) \r\n    ),\r\n    containerRequest = avg by (deployment, container) (deploymentName * on (pod) group_right(deployment) avg(kube_pod_container_resource_requests{resource=\"memory\",pod=~\"$deployment.*\", namespace=~\"$namespace\",container!=\"istio-proxy\"}) by (container, pod))\r\n)\r\ncontainerRequest",
@@ -252,7 +252,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "cduduhboc9xxca"
+            "uid": "bdxcrvm95rim8e"
           },
           "editorMode": "code",
           "expr": "WITH(\r\n    commonVars = {cluster=\"$cluster\", namespace=\"$namespace\"},\r\n    deploymentName = avg by (deployment, pod) (\r\n        label_replace(kube_pod_owner{commonVars, owner_kind=\"ReplicaSet\", owner_name=~\"$deployment.*\"}, \"replicaset\", \"$1\", \"owner_name\", \"(.*)\") \r\n        * on (replicaset) group_left(deployment) avg(label_replace(kube_replicaset_owner{commonVars, owner_name=~\"$deployment\"}, \"deployment\", \"$1\", \"owner_name\", \"(.*)\")) by (replicaset, deployment) \r\n    ),\r\n    containerLimit = avg by (deployment, container) (deploymentName * on (pod) group_right(deployment) avg(kube_pod_container_resource_limits{resource=\"memory\",pod=~\"$deployment.*\", namespace=~\"$namespace\"}) by (container, pod))\r\n)\r\ncontainerLimit",
@@ -265,7 +265,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "cduduhboc9xxca"
+            "uid": "bdxcrvm95rim8e"
           },
           "editorMode": "code",
           "expr": "WITH(\r\n    commonVars = {cluster=\"$cluster\", namespace=\"$namespace\"},\r\n    deploymentName = avg by (deployment, pod) (\r\n        label_replace(kube_pod_owner{commonVars, owner_kind=\"ReplicaSet\", owner_name=~\"$deployment.*\"}, \"replicaset\", \"$1\", \"owner_name\", \"(.*)\") \r\n        * on (replicaset) group_left(deployment) avg(label_replace(kube_replicaset_owner{commonVars, owner_name=~\"$deployment\"}, \"deployment\", \"$1\", \"owner_name\", \"(.*)\")) by (replicaset, deployment) \r\n    ),\r\n    containerUsage = avg by (deployment, container) (deploymentName * on (pod) group_right(deployment) avg(container_memory_working_set_bytes{pod=~\"$deployment.*\",namespace=~\"$namespace\"}) by (container, pod))\r\n)\r\ncontainerUsage",
@@ -537,7 +537,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "cduduhboc9xxca"
+            "uid": "bdxcrvm95rim8e"
           },
           "fieldConfig": {
             "defaults": {
@@ -615,7 +615,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "cduduhboc9xxca"
+                "uid": "bdxcrvm95rim8e"
               },
               "editorMode": "code",
               "expr": "sum(rate(http_request_duration_seconds_count{pod=~\"$deployment.*\"}[1m]))",
@@ -1147,7 +1147,7 @@
       "collapsed": true,
       "datasource": {
         "type": "prometheus",
-        "uid": "cduduhboc9xxca"
+        "uid": "bdxcrvm95rim8e"
       },
       "gridPos": {
         "h": 1,
@@ -1753,7 +1753,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "cduduhboc9xxca"
+            "uid": "bdxcrvm95rim8e"
           },
           "refId": "A"
         }
@@ -1765,7 +1765,7 @@
       "collapsed": true,
       "datasource": {
         "type": "prometheus",
-        "uid": "cduduhboc9xxca"
+        "uid": "bdxcrvm95rim8e"
       },
       "gridPos": {
         "h": 1,
@@ -2143,7 +2143,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "cduduhboc9xxca"
+            "uid": "bdxcrvm95rim8e"
           },
           "fieldConfig": {
             "defaults": {
@@ -2228,7 +2228,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "cduduhboc9xxca"
+                "uid": "bdxcrvm95rim8e"
               },
               "expr": "sum(kube_node_info{cluster=~\"$cluster\"})",
               "interval": "",
@@ -2244,7 +2244,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "cduduhboc9xxca"
+            "uid": "bdxcrvm95rim8e"
           },
           "refId": "A"
         }
@@ -2256,7 +2256,7 @@
       "collapsed": true,
       "datasource": {
         "type": "prometheus",
-        "uid": "cduduhboc9xxca"
+        "uid": "bdxcrvm95rim8e"
       },
       "gridPos": {
         "h": 1,
@@ -2665,7 +2665,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "cduduhboc9xxca"
+            "uid": "bdxcrvm95rim8e"
           },
           "refId": "A"
         }
@@ -2677,7 +2677,7 @@
       "collapsed": true,
       "datasource": {
         "type": "prometheus",
-        "uid": "cduduhboc9xxca"
+        "uid": "bdxcrvm95rim8e"
       },
       "gridPos": {
         "h": 1,
@@ -2961,7 +2961,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "cduduhboc9xxca"
+            "uid": "bdxcrvm95rim8e"
           },
           "refId": "A"
         }
@@ -2973,7 +2973,7 @@
       "collapsed": true,
       "datasource": {
         "type": "prometheus",
-        "uid": "cduduhboc9xxca"
+        "uid": "bdxcrvm95rim8e"
       },
       "gridPos": {
         "h": 1,
@@ -3578,7 +3578,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "cduduhboc9xxca"
+            "uid": "bdxcrvm95rim8e"
           },
           "refId": "A"
         }
@@ -3590,7 +3590,7 @@
       "collapsed": true,
       "datasource": {
         "type": "prometheus",
-        "uid": "cduduhboc9xxca"
+        "uid": "bdxcrvm95rim8e"
       },
       "gridPos": {
         "h": 1,
@@ -4069,7 +4069,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "cduduhboc9xxca"
+            "uid": "bdxcrvm95rim8e"
           },
           "refId": "A"
         }
@@ -4081,7 +4081,7 @@
       "collapsed": true,
       "datasource": {
         "type": "prometheus",
-        "uid": "cduduhboc9xxca"
+        "uid": "bdxcrvm95rim8e"
       },
       "gridPos": {
         "h": 1,
@@ -4094,7 +4094,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "cduduhboc9xxca"
+            "uid": "bdxcrvm95rim8e"
           },
           "fieldConfig": {
             "defaults": {
@@ -4174,7 +4174,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "cduduhboc9xxca"
+                "uid": "bdxcrvm95rim8e"
               },
               "expr": "kube_hpa_status_current_replicas{cluster=~\"$cluster\",namespace=~\"$namespace\"}",
               "instant": false,
@@ -4185,7 +4185,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "cduduhboc9xxca"
+                "uid": "bdxcrvm95rim8e"
               },
               "expr": "kube_hpa_spec_max_replicas{cluster=~\"$cluster\",namespace=~\"$namespace\"}",
               "instant": false,
@@ -4196,7 +4196,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "cduduhboc9xxca"
+                "uid": "bdxcrvm95rim8e"
               },
               "expr": "kube_hpa_spec_min_replicas{cluster=~\"$cluster\",namespace=~\"$namespace\"}",
               "instant": false,
@@ -4211,7 +4211,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "cduduhboc9xxca"
+            "uid": "bdxcrvm95rim8e"
           },
           "fieldConfig": {
             "defaults": {
@@ -4296,7 +4296,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "cduduhboc9xxca"
+                "uid": "bdxcrvm95rim8e"
               },
               "expr": "sum(kube_hpa_status_current_replicas{hpa=~\".*\"})",
               "instant": false,
@@ -4311,7 +4311,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "cduduhboc9xxca"
+            "uid": "bdxcrvm95rim8e"
           },
           "fieldConfig": {
             "defaults": {
@@ -4391,7 +4391,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "cduduhboc9xxca"
+                "uid": "bdxcrvm95rim8e"
               },
               "expr": "kube_hpa_status_current_replicas{hpa=~\".*\"} == kube_hpa_spec_max_replicas{hpa=~\".*\"}",
               "instant": false,
@@ -4406,7 +4406,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "cduduhboc9xxca"
+            "uid": "bdxcrvm95rim8e"
           },
           "fieldConfig": {
             "defaults": {
@@ -4486,7 +4486,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "cduduhboc9xxca"
+                "uid": "bdxcrvm95rim8e"
               },
               "expr": "kube_hpa_status_current_replicas{hpa=~\".*\"} == kube_hpa_spec_min_replicas{hpa=~\".*\"}",
               "instant": false,
@@ -4503,7 +4503,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "cduduhboc9xxca"
+            "uid": "bdxcrvm95rim8e"
           },
           "refId": "A"
         }
@@ -4515,7 +4515,7 @@
       "collapsed": true,
       "datasource": {
         "type": "prometheus",
-        "uid": "cduduhboc9xxca"
+        "uid": "bdxcrvm95rim8e"
       },
       "gridPos": {
         "h": 1,
@@ -5043,7 +5043,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "cduduhboc9xxca"
+            "uid": "bdxcrvm95rim8e"
           },
           "refId": "A"
         }
@@ -5055,7 +5055,7 @@
       "collapsed": true,
       "datasource": {
         "type": "prometheus",
-        "uid": "cduduhboc9xxca"
+        "uid": "bdxcrvm95rim8e"
       },
       "gridPos": {
         "h": 1,
@@ -5314,7 +5314,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "cduduhboc9xxca"
+            "uid": "bdxcrvm95rim8e"
           },
           "refId": "A"
         }
@@ -5426,7 +5426,7 @@
         },
         "datasource": {
           "type": "prometheus",
-          "uid": "cduduhboc9xxca"
+          "uid": "bdxcrvm95rim8e"
         },
         "definition": "label_values(deployment)",
         "hide": 0,
@@ -5478,7 +5478,7 @@
   },
   "timezone": "browser",
   "title": "Kubernetes Dashboard",
-  "uid": "garysdevil-kube-state-metrics-v2",
+  "uid": "fastcampus",
   "version": 10,
   "weekStart": ""
 }
