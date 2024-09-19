@@ -530,12 +530,63 @@
       "type": "timeseries"
     },
     {
-      "collapsed": true,
+      "collapsed": false,
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
         "y": 8
+      },
+      "id": 251,
+      "panels": [],
+      "title": "Logs",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "default": false,
+        "type": "loki",
+        "uid": "edya678yfbjswf"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 9
+      },
+      "id": 252,
+      "options": {
+        "dedupStrategy": "none",
+        "enableLogDetails": true,
+        "prettifyLogMessage": false,
+        "showCommonLabels": false,
+        "showLabels": false,
+        "showTime": false,
+        "sortOrder": "Descending",
+        "wrapLogMessage": false
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "edya678yfbjswf"
+          },
+          "editorMode": "builder",
+          "expr": "{container=\"$deployment\"} |= `error`",
+          "queryType": "range",
+          "refId": "A"
+        }
+      ],
+      "title": "Error Logs",
+      "type": "logs"
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 17
       },
       "id": 95,
       "panels": [
@@ -603,7 +654,7 @@
             "h": 7,
             "w": 7,
             "x": 0,
-            "y": 9
+            "y": 17
           },
           "id": 96,
           "options": {
@@ -699,7 +750,7 @@
             "h": 7,
             "w": 8,
             "x": 7,
-            "y": 9
+            "y": 17
           },
           "id": 245,
           "options": {
@@ -801,7 +852,7 @@
             "h": 7,
             "w": 9,
             "x": 15,
-            "y": 9
+            "y": 17
           },
           "id": 247,
           "options": {
@@ -914,7 +965,7 @@
             "h": 8,
             "w": 7,
             "x": 0,
-            "y": 16
+            "y": 24
           },
           "id": 248,
           "options": {
@@ -1016,7 +1067,7 @@
             "h": 8,
             "w": 8,
             "x": 7,
-            "y": 16
+            "y": 24
           },
           "id": 249,
           "options": {
@@ -1116,7 +1167,7 @@
             "h": 8,
             "w": 9,
             "x": 15,
-            "y": 16
+            "y": 24
           },
           "id": 246,
           "options": {
@@ -1165,7 +1216,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 9
+        "y": 18
       },
       "id": 58,
       "panels": [
@@ -1212,7 +1263,7 @@
             "h": 4,
             "w": 6,
             "x": 0,
-            "y": 10
+            "y": 18
           },
           "id": 4,
           "maxDataPoints": 100,
@@ -1294,7 +1345,7 @@
             "h": 4,
             "w": 6,
             "x": 6,
-            "y": 10
+            "y": 18
           },
           "id": 5,
           "maxDataPoints": 100,
@@ -1375,7 +1426,7 @@
             "h": 4,
             "w": 6,
             "x": 12,
-            "y": 10
+            "y": 18
           },
           "id": 6,
           "maxDataPoints": 100,
@@ -1474,7 +1525,7 @@
             "h": 5,
             "w": 6,
             "x": 0,
-            "y": 14
+            "y": 22
           },
           "id": 9,
           "options": {
@@ -1578,7 +1629,7 @@
             "h": 5,
             "w": 6,
             "x": 6,
-            "y": 14
+            "y": 22
           },
           "id": 10,
           "options": {
@@ -1702,7 +1753,7 @@
             "h": 5,
             "w": 6,
             "x": 12,
-            "y": 14
+            "y": 22
           },
           "id": 11,
           "options": {
@@ -1786,7 +1837,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 10
+        "y": 19
       },
       "id": 22,
       "panels": [
@@ -1827,7 +1878,7 @@
             "h": 3,
             "w": 4,
             "x": 0,
-            "y": 11
+            "y": 19
           },
           "id": 24,
           "maxDataPoints": 100,
@@ -1906,7 +1957,7 @@
             "h": 3,
             "w": 4,
             "x": 4,
-            "y": 11
+            "y": 19
           },
           "id": 26,
           "maxDataPoints": 100,
@@ -2007,7 +2058,7 @@
             "h": 3,
             "w": 8,
             "x": 8,
-            "y": 11
+            "y": 19
           },
           "id": 78,
           "options": {
@@ -2102,7 +2153,7 @@
             "h": 3,
             "w": 8,
             "x": 16,
-            "y": 11
+            "y": 19
           },
           "id": 51,
           "options": {
@@ -2218,7 +2269,7 @@
             "h": 7,
             "w": 24,
             "x": 0,
-            "y": 14
+            "y": 22
           },
           "id": 88,
           "options": {
@@ -2277,7 +2328,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 11
+        "y": 20
       },
       "id": 14,
       "panels": [
@@ -2415,7 +2466,7 @@
             "h": 5,
             "w": 6,
             "x": 0,
-            "y": 12
+            "y": 20
           },
           "id": 16,
           "options": {
@@ -2493,7 +2544,7 @@
             "h": 5,
             "w": 6,
             "x": 6,
-            "y": 12
+            "y": 20
           },
           "id": 18,
           "maxDataPoints": 100,
@@ -2566,7 +2617,7 @@
             "h": 5,
             "w": 6,
             "x": 12,
-            "y": 12
+            "y": 20
           },
           "id": 19,
           "maxDataPoints": 100,
@@ -2639,7 +2690,7 @@
             "h": 5,
             "w": 6,
             "x": 18,
-            "y": 12
+            "y": 20
           },
           "id": 20,
           "maxDataPoints": 100,
@@ -2698,7 +2749,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 12
+        "y": 21
       },
       "id": 71,
       "panels": [
@@ -2836,7 +2887,7 @@
             "h": 5,
             "w": 6,
             "x": 0,
-            "y": 13
+            "y": 21
           },
           "id": 75,
           "options": {
@@ -2939,7 +2990,7 @@
             "h": 5,
             "w": 12,
             "x": 6,
-            "y": 13
+            "y": 21
           },
           "id": 73,
           "options": {
@@ -2994,7 +3045,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 13
+        "y": 22
       },
       "id": 28,
       "panels": [
@@ -3061,7 +3112,7 @@
             "h": 9,
             "w": 6,
             "x": 0,
-            "y": 69
+            "y": 77
           },
           "id": 68,
           "options": {
@@ -3165,7 +3216,7 @@
             "h": 9,
             "w": 6,
             "x": 6,
-            "y": 69
+            "y": 77
           },
           "id": 77,
           "options": {
@@ -3239,7 +3290,7 @@
             "h": 3,
             "w": 12,
             "x": 12,
-            "y": 69
+            "y": 77
           },
           "id": 30,
           "maxDataPoints": 100,
@@ -3317,7 +3368,7 @@
             "h": 3,
             "w": 6,
             "x": 12,
-            "y": 72
+            "y": 80
           },
           "id": 33,
           "maxDataPoints": 100,
@@ -3395,7 +3446,7 @@
             "h": 3,
             "w": 6,
             "x": 18,
-            "y": 72
+            "y": 80
           },
           "id": 32,
           "maxDataPoints": 100,
@@ -3473,7 +3524,7 @@
             "h": 3,
             "w": 6,
             "x": 12,
-            "y": 75
+            "y": 83
           },
           "id": 31,
           "maxDataPoints": 100,
@@ -3551,7 +3602,7 @@
             "h": 3,
             "w": 6,
             "x": 18,
-            "y": 75
+            "y": 83
           },
           "id": 34,
           "maxDataPoints": 100,
@@ -3611,7 +3662,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 14
+        "y": 23
       },
       "id": 36,
       "panels": [
@@ -3656,7 +3707,7 @@
             "h": 3,
             "w": 6,
             "x": 0,
-            "y": 70
+            "y": 78
           },
           "id": 38,
           "maxDataPoints": 100,
@@ -3735,7 +3786,7 @@
             "h": 3,
             "w": 6,
             "x": 6,
-            "y": 70
+            "y": 78
           },
           "id": 39,
           "maxDataPoints": 100,
@@ -3812,7 +3863,7 @@
             "h": 3,
             "w": 6,
             "x": 12,
-            "y": 70
+            "y": 78
           },
           "id": 40,
           "maxDataPoints": 100,
@@ -3889,7 +3940,7 @@
             "h": 3,
             "w": 6,
             "x": 18,
-            "y": 70
+            "y": 78
           },
           "id": 41,
           "maxDataPoints": 100,
@@ -3966,7 +4017,7 @@
             "h": 3,
             "w": 12,
             "x": 0,
-            "y": 73
+            "y": 81
           },
           "id": 43,
           "maxDataPoints": 100,
@@ -4043,7 +4094,7 @@
             "h": 3,
             "w": 12,
             "x": 12,
-            "y": 73
+            "y": 81
           },
           "id": 42,
           "maxDataPoints": 100,
@@ -4102,7 +4153,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 15
+        "y": 24
       },
       "id": 80,
       "panels": [
@@ -4169,7 +4220,7 @@
             "h": 8,
             "w": 24,
             "x": 0,
-            "y": 71
+            "y": 79
           },
           "id": 82,
           "options": {
@@ -4286,7 +4337,7 @@
             "h": 8,
             "w": 24,
             "x": 0,
-            "y": 79
+            "y": 87
           },
           "id": 89,
           "options": {
@@ -4386,7 +4437,7 @@
             "h": 10,
             "w": 12,
             "x": 0,
-            "y": 87
+            "y": 95
           },
           "id": 90,
           "options": {
@@ -4481,7 +4532,7 @@
             "h": 10,
             "w": 12,
             "x": 12,
-            "y": 87
+            "y": 95
           },
           "id": 92,
           "options": {
@@ -4536,7 +4587,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 16
+        "y": 25
       },
       "id": 45,
       "panels": [
@@ -4581,7 +4632,7 @@
             "h": 3,
             "w": 8,
             "x": 0,
-            "y": 72
+            "y": 80
           },
           "id": 47,
           "maxDataPoints": 100,
@@ -4717,7 +4768,7 @@
             "h": 9,
             "w": 8,
             "x": 8,
-            "y": 72
+            "y": 80
           },
           "hideTimeOverride": false,
           "id": 62,
@@ -4856,7 +4907,7 @@
             "h": 9,
             "w": 8,
             "x": 16,
-            "y": 72
+            "y": 80
           },
           "hideTimeOverride": false,
           "id": 76,
@@ -4940,7 +4991,7 @@
             "h": 3,
             "w": 8,
             "x": 0,
-            "y": 75
+            "y": 83
           },
           "id": 48,
           "maxDataPoints": 100,
@@ -5017,7 +5068,7 @@
             "h": 3,
             "w": 8,
             "x": 0,
-            "y": 78
+            "y": 86
           },
           "id": 49,
           "maxDataPoints": 100,
@@ -5076,7 +5127,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 17
+        "y": 26
       },
       "id": 64,
       "panels": [
@@ -5117,7 +5168,7 @@
             "h": 8,
             "w": 6,
             "x": 0,
-            "y": 65
+            "y": 73
           },
           "id": 66,
           "maxDataPoints": 100,
@@ -5191,7 +5242,7 @@
             "h": 8,
             "w": 6,
             "x": 6,
-            "y": 65
+            "y": 73
           },
           "id": 69,
           "maxDataPoints": 100,
@@ -5284,7 +5335,7 @@
             "h": 8,
             "w": 12,
             "x": 12,
-            "y": 65
+            "y": 73
           },
           "id": 250,
           "options": {
@@ -5418,9 +5469,9 @@
       {
         "allValue": "",
         "current": {
-          "selected": false,
-          "text": "argocd",
-          "value": "argocd"
+          "selected": true,
+          "text": "monitoring",
+          "value": "monitoring"
         },
         "datasource": {
           "type": "prometheus",
@@ -5446,8 +5497,8 @@
       {
         "current": {
           "selected": false,
-          "text": "argocd-application-controller",
-          "value": "argocd-application-controller"
+          "text": "grafana",
+          "value": "grafana"
         },
         "datasource": {
           "type": "prometheus",
@@ -5504,6 +5555,6 @@
   "timezone": "browser",
   "title": "Kubernetes Dashboard",
   "uid": "fastcampus",
-  "version": 3,
+  "version": 4,
   "weekStart": ""
 }
