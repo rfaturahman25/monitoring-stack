@@ -37,8 +37,9 @@
   "panels": [
     {
       "datasource": {
+        "name": "${datasource}",
         "type": "prometheus",
-        "uid": "bdxcrvm95rim8e"
+        "uid": "${datasource}"
       },
       "fieldConfig": {
         "defaults": {
@@ -52,6 +53,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -117,7 +119,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "bdxcrvm95rim8e"
+            "uid": "${datasource}"
           },
           "editorMode": "code",
           "expr": "WITH(\r\n    commonVars = {cluster=\"$cluster\", namespace=\"$namespace\"},\r\n    deploymentName = avg by (deployment, pod) (\r\n        label_replace(kube_pod_owner{commonVars, owner_kind=\"ReplicaSet\", owner_name=~\"$deployment.*\"}, \"replicaset\", \"$1\", \"owner_name\", \"(.*)\") \r\n        * on (replicaset) group_left(deployment) avg(label_replace(kube_replicaset_owner{commonVars, owner_name=~\"$deployment\"}, \"deployment\", \"$1\", \"owner_name\", \"(.*)\")) by (replicaset, deployment) \r\n    ),\r\n    containerRequest = avg by (deployment, container) (deploymentName * on (pod) group_right(deployment) avg(kube_pod_container_resource_requests{resource=\"cpu\",pod=~\"$deployment.*\", namespace=~\"$namespace\"}) by (pod, container))\r\n)\r\ncontainerRequest * 1000 ",
@@ -130,7 +132,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "bdxcrvm95rim8e"
+            "uid": "${datasource}"
           },
           "editorMode": "code",
           "expr": "WITH(\r\n    commonVars = {cluster=\"$cluster\", namespace=\"$namespace\"},\r\n    deploymentName = avg by (deployment, pod) (\r\n        label_replace(kube_pod_owner{commonVars, owner_kind=\"ReplicaSet\", owner_name=~\"$deployment.*\"}, \"replicaset\", \"$1\", \"owner_name\", \"(.*)\") \r\n        * on (replicaset) group_left(deployment) avg(label_replace(kube_replicaset_owner{commonVars, owner_name=~\"$deployment\"}, \"deployment\", \"$1\", \"owner_name\", \"(.*)\")) by (replicaset, deployment) \r\n    ),\r\n    containerLimit = avg by (deployment, container) (deploymentName * on (pod) group_right(deployment) avg(kube_pod_container_resource_limits{resource=\"cpu\",pod=~\"$deployment.*\", namespace=~\"$namespace\"}) by (pod, container))\r\n)\r\ncontainerLimit * 1000 ",
@@ -143,7 +145,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "bdxcrvm95rim8e"
+            "uid": "${datasource}"
           },
           "editorMode": "code",
           "expr": "WITH(\r\n    commonVars = {cluster=\"$cluster\", namespace=\"$namespace\"},\r\n    deploymentName = avg by (deployment, pod) (\r\n        label_replace(kube_pod_owner{commonVars, owner_kind=\"ReplicaSet\", owner_name=~\"$deployment.*\"}, \"replicaset\", \"$1\", \"owner_name\", \"(.*)\") \r\n        * on (replicaset) group_left(deployment) avg(label_replace(kube_replicaset_owner{commonVars, owner_name=~\"$deployment\"}, \"deployment\", \"$1\", \"owner_name\", \"(.*)\")) by (replicaset, deployment) \r\n    ),\r\n    containerUsage = avg by (deployment, container) (deploymentName * on (pod) group_right(deployment) sum(rate(container_cpu_usage_seconds_total{pod=~\"$deployment.*\",namespace=~\"$namespace\"}[$__rate_interval])) by (pod,container))\r\n)\r\ncontainerUsage * 1000 ",
@@ -159,8 +161,9 @@
     },
     {
       "datasource": {
+        "name": "${datasource}",
         "type": "prometheus",
-        "uid": "bdxcrvm95rim8e"
+        "uid": "${datasource}"
       },
       "fieldConfig": {
         "defaults": {
@@ -174,6 +177,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -240,7 +244,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "bdxcrvm95rim8e"
+            "uid": "${datasource}"
           },
           "editorMode": "code",
           "expr": "WITH(\r\n    commonVars = {cluster=\"$cluster\", namespace=\"$namespace\"},\r\n    deploymentName = avg by (deployment, pod) (\r\n        label_replace(kube_pod_owner{commonVars, owner_kind=\"ReplicaSet\", owner_name=~\"$deployment.*\"}, \"replicaset\", \"$1\", \"owner_name\", \"(.*)\") \r\n        * on (replicaset) group_left(deployment) avg(label_replace(kube_replicaset_owner{commonVars, owner_name=~\"$deployment\"}, \"deployment\", \"$1\", \"owner_name\", \"(.*)\")) by (replicaset, deployment) \r\n    ),\r\n    containerRequest = avg by (deployment, container) (deploymentName * on (pod) group_right(deployment) avg(kube_pod_container_resource_requests{resource=\"memory\",pod=~\"$deployment.*\", namespace=~\"$namespace\",container!=\"istio-proxy\"}) by (container, pod))\r\n)\r\ncontainerRequest",
@@ -252,7 +256,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "bdxcrvm95rim8e"
+            "uid": "${datasource}"
           },
           "editorMode": "code",
           "expr": "WITH(\r\n    commonVars = {cluster=\"$cluster\", namespace=\"$namespace\"},\r\n    deploymentName = avg by (deployment, pod) (\r\n        label_replace(kube_pod_owner{commonVars, owner_kind=\"ReplicaSet\", owner_name=~\"$deployment.*\"}, \"replicaset\", \"$1\", \"owner_name\", \"(.*)\") \r\n        * on (replicaset) group_left(deployment) avg(label_replace(kube_replicaset_owner{commonVars, owner_name=~\"$deployment\"}, \"deployment\", \"$1\", \"owner_name\", \"(.*)\")) by (replicaset, deployment) \r\n    ),\r\n    containerLimit = avg by (deployment, container) (deploymentName * on (pod) group_right(deployment) avg(kube_pod_container_resource_limits{resource=\"memory\",pod=~\"$deployment.*\", namespace=~\"$namespace\"}) by (container, pod))\r\n)\r\ncontainerLimit",
@@ -265,7 +269,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "bdxcrvm95rim8e"
+            "uid": "${datasource}"
           },
           "editorMode": "code",
           "expr": "WITH(\r\n    commonVars = {cluster=\"$cluster\", namespace=\"$namespace\"},\r\n    deploymentName = avg by (deployment, pod) (\r\n        label_replace(kube_pod_owner{commonVars, owner_kind=\"ReplicaSet\", owner_name=~\"$deployment.*\"}, \"replicaset\", \"$1\", \"owner_name\", \"(.*)\") \r\n        * on (replicaset) group_left(deployment) avg(label_replace(kube_replicaset_owner{commonVars, owner_name=~\"$deployment\"}, \"deployment\", \"$1\", \"owner_name\", \"(.*)\")) by (replicaset, deployment) \r\n    ),\r\n    containerUsage = avg by (deployment, container) (deploymentName * on (pod) group_right(deployment) avg(container_memory_working_set_bytes{pod=~\"$deployment.*\",namespace=~\"$namespace\"}) by (container, pod))\r\n)\r\ncontainerUsage",
@@ -296,6 +300,7 @@
             "axisLabel": "pods",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 100,
             "gradientMode": "none",
@@ -536,8 +541,9 @@
       "panels": [
         {
           "datasource": {
+            "default": false,
             "type": "prometheus",
-            "uid": "bdxcrvm95rim8e"
+            "uid": "${datasource}"
           },
           "fieldConfig": {
             "defaults": {
@@ -551,6 +557,7 @@
                 "axisLabel": "",
                 "axisPlacement": "auto",
                 "barAlignment": 0,
+                "barWidthFactor": 0.6,
                 "drawStyle": "line",
                 "fillOpacity": 0,
                 "gradientMode": "none",
@@ -615,7 +622,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "bdxcrvm95rim8e"
+                "uid": "${datasource}"
               },
               "editorMode": "code",
               "expr": "sum(rate(http_request_duration_seconds_count{pod=~\"$deployment.*\"}[1m]))",
@@ -625,7 +632,7 @@
               "refId": "A"
             }
           ],
-          "title": "Panel Title",
+          "title": "RPM",
           "type": "timeseries"
         },
         {
@@ -646,6 +653,7 @@
                 "axisLabel": "",
                 "axisPlacement": "auto",
                 "barAlignment": 0,
+                "barWidthFactor": 0.6,
                 "drawStyle": "line",
                 "fillOpacity": 0,
                 "gradientMode": "none",
@@ -743,6 +751,7 @@
                 "axisLabel": "",
                 "axisPlacement": "auto",
                 "barAlignment": 0,
+                "barWidthFactor": 0.6,
                 "drawStyle": "line",
                 "fillOpacity": 0,
                 "gradientMode": "none",
@@ -858,6 +867,7 @@
                 "axisLabel": "",
                 "axisPlacement": "auto",
                 "barAlignment": 0,
+                "barWidthFactor": 0.6,
                 "drawStyle": "line",
                 "fillOpacity": 0,
                 "gradientMode": "none",
@@ -959,6 +969,7 @@
                 "axisLabel": "",
                 "axisPlacement": "auto",
                 "barAlignment": 0,
+                "barWidthFactor": 0.6,
                 "drawStyle": "line",
                 "fillOpacity": 0,
                 "gradientMode": "none",
@@ -1059,6 +1070,7 @@
                 "axisLabel": "",
                 "axisPlacement": "auto",
                 "barAlignment": 0,
+                "barWidthFactor": 0.6,
                 "drawStyle": "line",
                 "fillOpacity": 0,
                 "gradientMode": "none",
@@ -1221,7 +1233,7 @@
             "textMode": "auto",
             "wideLayout": true
           },
-          "pluginVersion": "11.1.3",
+          "pluginVersion": "11.2.0",
           "targets": [
             {
               "datasource": {
@@ -1303,7 +1315,7 @@
             "textMode": "auto",
             "wideLayout": true
           },
-          "pluginVersion": "11.1.3",
+          "pluginVersion": "11.2.0",
           "targets": [
             {
               "datasource": {
@@ -1384,7 +1396,7 @@
             "textMode": "auto",
             "wideLayout": true
           },
-          "pluginVersion": "11.1.3",
+          "pluginVersion": "11.2.0",
           "targets": [
             {
               "datasource": {
@@ -1415,6 +1427,7 @@
                 "axisLabel": "pods",
                 "axisPlacement": "auto",
                 "barAlignment": 0,
+                "barWidthFactor": 0.6,
                 "drawStyle": "line",
                 "fillOpacity": 10,
                 "gradientMode": "none",
@@ -1518,6 +1531,7 @@
                 "axisLabel": "cores",
                 "axisPlacement": "auto",
                 "barAlignment": 0,
+                "barWidthFactor": 0.6,
                 "drawStyle": "line",
                 "fillOpacity": 10,
                 "gradientMode": "none",
@@ -1641,6 +1655,7 @@
                 "axisLabel": "",
                 "axisPlacement": "auto",
                 "barAlignment": 0,
+                "barWidthFactor": 0.6,
                 "drawStyle": "line",
                 "fillOpacity": 10,
                 "gradientMode": "none",
@@ -5334,12 +5349,29 @@
       {
         "current": {
           "selected": false,
+          "text": "vmcluster",
+          "value": "bdya62qdnqd4wd"
+        },
+        "hide": 0,
+        "includeAll": false,
+        "multi": false,
+        "name": "datasource",
+        "options": [],
+        "query": "prometheus",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "type": "datasource"
+      },
+      {
+        "current": {
+          "selected": false,
           "text": "staging",
           "value": "staging"
         },
         "datasource": {
           "type": "prometheus",
-          "uid": "$datasource"
+          "uid": "${datasource}"
         },
         "definition": "label_values(kube_node_info, cluster)",
         "hide": 0,
@@ -5387,8 +5419,8 @@
         "allValue": "",
         "current": {
           "selected": false,
-          "text": "default",
-          "value": "default"
+          "text": "argocd",
+          "value": "argocd"
         },
         "datasource": {
           "type": "prometheus",
@@ -5412,23 +5444,16 @@
         "useTags": false
       },
       {
-        "hide": 2,
-        "name": "datasource",
-        "query": "vmcluster",
-        "skipUrlSync": false,
-        "type": "constant"
-      },
-      {
         "current": {
           "selected": false,
-          "text": "grafana",
-          "value": "grafana"
+          "text": "argocd-application-controller",
+          "value": "argocd-application-controller"
         },
         "datasource": {
           "type": "prometheus",
-          "uid": "bdxcrvm95rim8e"
+          "uid": "${datasource}"
         },
-        "definition": "label_values(deployment)",
+        "definition": "label_values({namespace=\"$namespace\"},deployment)",
         "hide": 0,
         "includeAll": false,
         "label": "deployment",
@@ -5437,7 +5462,7 @@
         "options": [],
         "query": {
           "qryType": 1,
-          "query": "label_values(deployment)",
+          "query": "label_values({namespace=\"$namespace\"},deployment)",
           "refId": "PrometheusVariableQueryEditor-VariableQuery"
         },
         "refresh": 1,
@@ -5449,7 +5474,7 @@
     ]
   },
   "time": {
-    "from": "now-24h",
+    "from": "now-30m",
     "to": "now"
   },
   "timepicker": {
@@ -5479,6 +5504,6 @@
   "timezone": "browser",
   "title": "Kubernetes Dashboard",
   "uid": "fastcampus",
-  "version": 10,
+  "version": 3,
   "weekStart": ""
 }
